@@ -1,0 +1,5 @@
+node_modules/
+.env
+todo.md
+yarn-error.log
+yarn.lock
