@@ -1,4 +1,4 @@
-!(logo)[https://raw.githubusercontent.com/Capure/Vocall/main/logo.svg]
+![logo](https://raw.githubusercontent.com/Capure/Vocall/main/logo.svg)
 
 # Vocall
 
