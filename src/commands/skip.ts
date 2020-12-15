@@ -1,6 +1,6 @@
 import { onFinish } from './../utils/onFinish';
-import Discord = require('discord.js');
-import ytdl = require('ytdl-core');
+import Discord from 'discord.js';
+import ytdl from 'ytdl-core';
 import { RedisLogic } from '../redisLogic';
 
 

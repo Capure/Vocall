@@ -1,4 +1,4 @@
-import Discord = require('discord.js');
+import Discord from 'discord.js';
 
 export const help = async (msg: Discord.Message) => {
     const embed: Discord.MessageEmbed = new Discord.MessageEmbed()

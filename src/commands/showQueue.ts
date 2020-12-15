@@ -1,4 +1,4 @@
-import Discord = require('discord.js');
+import Discord from 'discord.js';
 import { RedisLogic } from '../redisLogic';
 
 

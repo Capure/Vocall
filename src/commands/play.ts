@@ -1,8 +1,8 @@
 import { onFinish } from './../utils/onFinish';
 import { song } from './../interfaces/song';
 import { RedisLogic } from './../redisLogic';
-import Discord = require('discord.js');
-import ytdl = require('ytdl-core');
+import Discord from 'discord.js';
+import ytdl from 'ytdl-core';
 import yts from 'yt-search';
 
 export const playMusic = async (msg: Discord.Message, db: RedisLogic, connections: Map<string, Discord.VoiceConnection>) => {
