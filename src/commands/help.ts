@@ -6,6 +6,7 @@ export const help = async (msg: Discord.Message) => {
         .setColor(0x000000)
         .setDescription(`
         \`play\` - let's you play music
+        \`repeat\` - let's you put the current song on repeat
         \`skip\` - let's you skip to another song
         \`queue\` - let's you see all then songs in the queue
         \`clear\` - let's you clear the queue

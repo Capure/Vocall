@@ -1,3 +1,4 @@
+import { repeat } from './commands/repeat';
 import { help } from './commands/help';
 import { changeVolume } from './commands/volume';
 import { clearQueue } from './commands/clearQueue';
@@ -14,7 +15,7 @@ import redis from 'redis';
 dotenv.config({ path: path.join(__dirname, "../.env") });
 const redisClient = redis.createClient();
 const client: Discord.Client = new Discord.Client();
-const prefix: string = "$";
+const prefix: string = "$$";
 
 redisClient.on('error', err => {
     console.error(err);
@@ -36,6 +37,12 @@ client.on('message', msg => {
             break;
         case `${prefix}play`:
             playMusic(msg, db, connections);
+            break;
+        case `${prefix}p`:
+            playMusic(msg, db, connections);
+            break;
+        case `${prefix}repeat`:
+            repeat(msg, db);
             break;
         case `${prefix}die`:
             die(msg, db, connections);

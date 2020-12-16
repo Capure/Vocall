@@ -2,5 +2,6 @@ export interface song {
     title: string,
     url: string,
     requestedAt: number,
-    requestedById: string
+    requestedById: string,
+    repeat: boolean
 }

@@ -36,7 +36,8 @@ export const playMusic = async (msg: Discord.Message, db: RedisLogic, connection
             title: songInfo.videoDetails.title,
             url: songInfo.videoDetails.video_url,
             requestedAt: Math.floor(new Date().getTime() / 1000),
-            requestedById: msg.author.id
+            requestedById: msg.author.id,
+            repeat: false
         };
         const currentQueue = await db.getQueue(msg.guild?.id);
         if (!currentQueue.playing) {
