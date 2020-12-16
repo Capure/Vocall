@@ -14,6 +14,20 @@ export const changeVolume = async (msg: Discord.Message, db: RedisLogic, connect
         msg.channel.send(embed);
         return;
     }
+    if (newVolume < 0) {
+        const embed: Discord.MessageEmbed = new Discord.MessageEmbed()
+        .setColor(0x000000)
+        .setDescription("How do you want me to go below 0 ???\nAre you mad ?!");
+        msg.channel.send(embed);
+        return;
+    }
+    if (newVolume > 200) {
+        const embed: Discord.MessageEmbed = new Discord.MessageEmbed()
+        .setColor(0x000000)
+        .setDescription("You can not set the volume to higher than 200 ...\nThat would be rude to other people in your voice channel!");
+        msg.channel.send(embed);
+        return;
+    }
     const queue = await db.getQueue(<any>(msg.guild?.id));
     if (!queue.playing) {
         const embed: Discord.MessageEmbed = new Discord.MessageEmbed()
