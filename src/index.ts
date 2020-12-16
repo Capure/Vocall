@@ -15,7 +15,7 @@ import redis from 'redis';
 dotenv.config({ path: path.join(__dirname, "../.env") });
 const redisClient = redis.createClient();
 const client: Discord.Client = new Discord.Client();
-const prefix: string = "$$";
+const prefix: string = "$";
 
 redisClient.on('error', err => {
     console.error(err);
