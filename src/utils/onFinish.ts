@@ -63,3 +63,65 @@ export const onFinish = async (msg: Discord.Message, db: RedisLogic, connections
     });
     connection?.channel.leave();
 }
+
+export const onFinishCommand = async (interaction: Discord.Interaction, db: RedisLogic, connections: Map<string, Discord.VoiceConnection>) => {
+    const connection = connections.get(<any>(interaction.guild?.id));
+    const newQueue = await db.getQueue(<any>(interaction.guild?.id));
+    if (newQueue.current?.repeat) {
+        connection?.play(ytdl(newQueue.current.url, { filter: 'audioonly' }), { volume: newQueue.volume }).on("finish", () => {
+            onFinishCommand(interaction, db, connections);
+        }).on("error", async (err) => {
+                console.error(err);
+                interaction.channel.send("Oopsie daisy! I just got a stroke!");
+                await db.setQueue(<any>(interaction.guild?.id), {
+                    playing: false,
+                    current: null,
+                    songs: [],
+                    volume: newQueue.volume
+                });
+            });
+        const embed: Discord.MessageEmbed = new Discord.MessageEmbed()
+            .setColor(0x000000)
+            .setDescription(`Repeating: \`${newQueue.current.title}\`\nOriginally requested by <@${newQueue.current.requestedById}>`);
+        interaction.channel.send(embed);
+        return;
+    }
+    if (newQueue.songs.length > 0) {
+        const nextSong = newQueue.songs.shift();
+        if (!nextSong) {
+            console.error("Song was undefined!");
+            return;
+        }
+        connection?.play(ytdl(nextSong.url, { filter: 'audioonly' }), { volume: newQueue.volume }).on("finish", () => {
+            onFinishCommand(interaction, db, connections);
+        }).on("error", async (err) => {
+                console.error(err);
+                interaction.channel.send("Oopsie daisy! I just got a stroke!");
+                await db.setQueue(<any>(interaction.guild?.id), {
+                    playing: false,
+                    current: null,
+                    songs: [],
+                    volume: newQueue.volume
+                });
+            });
+        await db.setQueue(<any>(interaction.guild?.id), {
+            playing: true,
+            current: nextSong,
+            songs: newQueue.songs,
+            volume: newQueue.volume
+        });
+        const embed: Discord.MessageEmbed = new Discord.MessageEmbed()
+            .setColor(0x000000)
+            .setDescription(`Playing: \`${nextSong.title}\`\n Requested by <@${nextSong.requestedById}>`);
+        interaction.channel.send(embed);
+        return;
+    }
+    connections.delete(<any>(interaction.guild?.id));
+    await db.setQueue(<any>(interaction.guild?.id), {
+        playing: false,
+        current: null,
+        songs: [],
+        volume: newQueue.volume
+    });
+    connection?.channel.leave();
+}

@@ -30,7 +30,9 @@
   "dependencies": {
     "@babel/runtime": "^7.12.5",
     "@discordjs/opus": "^0.3.3",
-    "discord.js": "^12.5.1",
+    "discord-slash-commands": "^1.1.0",
+    "discord-slash-commands-client": "^1.0.3",
+    "discord.js": "https://github.com/MatteZ02/discord.js",
     "dotenv": "^8.2.0",
     "redis": "^3.0.2",
     "yt-search": "^2.5.1",

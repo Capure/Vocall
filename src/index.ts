@@ -1,20 +1,22 @@
-import { repeat } from './commands/repeat';
+import { repeat, repeatCommand } from './commands/repeat';
 import { help } from './commands/help';
-import { changeVolume } from './commands/volume';
-import { clearQueue } from './commands/clearQueue';
-import { skip } from './commands/skip';
-import { showQueue } from './commands/showQueue';
-import { die } from './commands/die';
+import { changeVolume, changeVolumeCommand } from './commands/volume';
+import { clearQueue, clearQueueCommand } from './commands/clearQueue';
+import { skip, skipCommand } from './commands/skip';
+import { showQueue, showQueueCommand } from './commands/showQueue';
+import { die, dieCommand } from './commands/die';
 import Discord from 'discord.js';
 import path from 'path';
 import dotenv from "dotenv";
-import { playMusic } from './commands/play';
-import { sendPong } from './commands/pong';
+import { playMusic, playMusicCommand } from './commands/play';
+import { sendPong, sendPongCommand } from './commands/pong';
 import { RedisLogic } from './redisLogic';
 import redis from 'redis';
+import interactions from "discord-slash-commands-client";
 dotenv.config({ path: path.join(__dirname, "../.env") });
 const redisClient = redis.createClient();
-const client: Discord.Client = new Discord.Client();
+const client: Discord.Client & { interactions?: interactions.Client } = new Discord.Client();
+client.interactions = new interactions.Client(process.env.TOKEN ? process.env.TOKEN : "", process.env.BOT_ID ? process.env.BOT_ID : "");
 const prefix: string = "$";
 
 redisClient.on('error', err => {
@@ -27,7 +29,93 @@ const connections = new Map<string, Discord.VoiceConnection>();
 client.user?.setActivity("music", { type: "PLAYING" });
 
 client.on('ready', () => {
-  console.log(`Logged in as ${client.user?.tag}!`);
+    console.log(`Logged in as ${client.user?.tag}!`);
+    client.interactions?.createCommand({
+        name: "play",
+        description: "let's you play music",
+        options: [{
+            name: "song",
+            description: "Name or youtube url of the song you want to play.",
+            type: 3,
+            required: true
+        }]
+    })
+    .catch(console.error);
+    client.interactions?.createCommand({
+      name: "die",
+      description: "kills the bot"
+    })
+    .catch(console.error);
+    client.interactions?.createCommand({
+        name: "repeat",
+        description: "let's you put the current song on repeat"
+    })
+    .catch(console.error);
+    client.interactions?.createCommand({
+        name: "skip",
+        description: "let's you skip to another song"
+    })
+    .catch(console.error);
+    client.interactions?.createCommand({
+        name: "queue",
+        description: "let's you see all then songs in the queue"
+    })
+    .catch(console.error);
+    client.interactions?.createCommand({
+        name: "clear",
+        description: "let's you clear the queue"
+    })
+    .catch(console.error);
+    client.interactions?.createCommand({
+        name: "volume",
+        description: "let's you change the volume",
+        options: [{
+            name: "level",
+            description: "New volume level.",
+            type: 4,
+            required: true
+        }]
+    })
+    .catch(console.error);
+    client.interactions?.createCommand({
+        name: "ping",
+        description: "let's you check if the bot is still alive"
+    })
+    .catch(console.error);
+});
+
+client.on("interactionCreate", (interaction) => {
+    if (interaction.name === "ping") {
+      interaction.channel.send("pong");
+    }
+    switch (interaction.name) {
+        case "play":
+            playMusicCommand(interaction, db, connections);
+            break;
+        case "die":
+            dieCommand(interaction, db, connections);
+            break;
+        case "repeat":
+            repeatCommand(interaction, db);
+            break;
+        case "skip":
+            skipCommand(interaction, db, connections);
+            break;
+        case "queue":
+            showQueueCommand(interaction, db);
+            break;
+        case "clear":
+            clearQueueCommand(interaction, db);
+            break;
+        case "volume":
+            changeVolumeCommand(interaction, db, connections);
+            break;
+        case "ping":
+            sendPongCommand(interaction);
+            break;
+        default:
+            break;
+    }
 });
 
 client.on('message', msg => {
