@@ -32,6 +32,6 @@ export const repeatCommand = async (interaction: Discord.Interaction, db: RedisL
     await db.setQueue(<any>(interaction.guild?.id), queue);
     const embed: Discord.MessageEmbed = new Discord.MessageEmbed()
         .setColor(0x000000)
-        .setDescription("The song was set to repeat!");
+        .setDescription(`<@${interaction.author?.id}> just set the song to repeat!`);
     interaction.channel.send(embed);
 }

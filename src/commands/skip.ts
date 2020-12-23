@@ -63,9 +63,12 @@ export const skipCommand = async (interaction: Discord.Interaction, db: RedisLog
     });
     queue.current = <any>(nextSong);
     await db.setQueue(<any>(interaction.guild?.id), queue);
-
     const embed: Discord.MessageEmbed = new Discord.MessageEmbed()
         .setColor(0x000000)
         .setDescription(`<@${interaction.author?.id}> just skipped the song!`);
     interaction.channel.send(embed);
+    const nowPlayingEmbed: Discord.MessageEmbed = new Discord.MessageEmbed()
+        .setColor(0x000000)
+        .setDescription(`Playing: \`${nextSong?.title}\`\n Requested by <@${nextSong?.requestedById}>`);
+    interaction.channel.send(nowPlayingEmbed);
 }

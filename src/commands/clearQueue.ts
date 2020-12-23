@@ -32,6 +32,6 @@ export const clearQueueCommand = async (interaction: Discord.Interaction, db: Re
     await db.setQueue(<any>(interaction.guild?.id), queue);
     const embed: Discord.MessageEmbed = new Discord.MessageEmbed()
         .setColor(0x000000)
-        .setDescription("Queue has been cleared!");
+        .setDescription(`<@${interaction.author?.id}> just cleared the queue!`);
     interaction.channel.send(embed);
 }

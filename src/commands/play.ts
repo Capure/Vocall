@@ -127,7 +127,7 @@ export const playMusicCommand = async (interaction: Discord.Interaction, db: Red
             await db.setQueue(<any>(interaction.guild?.id), oldQueue);
             const embed: Discord.MessageEmbed = new Discord.MessageEmbed()
                 .setColor(0x000000)
-                .setDescription(`Added \`${song.title}\` to the queue!`);
+                .setDescription(`<@${interaction.author.id}> added \`${song.title}\` to the queue!`);
             msgchannel.send(embed);
         }
     }

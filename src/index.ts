@@ -18,7 +18,7 @@ dotenv.config({ path: path.join(__dirname, "../.env") });
 const redisClient = redis.createClient();
 const client: Discord.Client & { interactions?: interactions.Client } = new Discord.Client();
 client.interactions = new interactions.Client(process.env.TOKEN ? process.env.TOKEN : "", process.env.BOT_ID ? process.env.BOT_ID : "");
-const prefix: string = "$$";
+const prefix: string = "$";
 
 redisClient.on('error', err => {
     console.error(err);
