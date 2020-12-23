@@ -13,11 +13,12 @@ import { sendPong, sendPongCommand } from './commands/pong';
 import { RedisLogic } from './redisLogic';
 import redis from 'redis';
 import interactions from "discord-slash-commands-client";
+import { depWarning } from './utils/depWarning';
 dotenv.config({ path: path.join(__dirname, "../.env") });
 const redisClient = redis.createClient();
 const client: Discord.Client & { interactions?: interactions.Client } = new Discord.Client();
 client.interactions = new interactions.Client(process.env.TOKEN ? process.env.TOKEN : "", process.env.BOT_ID ? process.env.BOT_ID : "");
-const prefix: string = "$";
+const prefix: string = "$$";
 
 redisClient.on('error', err => {
     console.error(err);
@@ -118,37 +119,55 @@ client.on("interactionCreate", (interaction) => {
     }
 });
 
+// !WARNING! - This part and all of it's dependencies will be removed in the next release of Vocall
+// This is a breaking change
+// That's why I've changed the version number to 2.0.0
+// To make this transition smooth Vocall will display a warning for some time
+// And in the future I will purge the "legacy" commands from the source code
+//
+// Capure
+
 client.on('message', msg => {
     switch (msg.content.split(' ')[0]) {
         case `${prefix}help`:
             help(msg);
+            depWarning(msg);
             break;
         case `${prefix}play`:
             playMusic(msg, db, connections);
+            depWarning(msg);
             break;
         case `${prefix}p`:
             playMusic(msg, db, connections);
+            depWarning(msg);
             break;
         case `${prefix}repeat`:
             repeat(msg, db);
+            depWarning(msg);
             break;
         case `${prefix}die`:
             die(msg, db, connections);
+            depWarning(msg);
             break;
         case `${prefix}queue`:
             showQueue(msg, db);
+            depWarning(msg);
             break;
         case `${prefix}skip`:
             skip(msg, db, connections);
+            depWarning(msg);
             break;
         case `${prefix}clear`:
             clearQueue(msg, db);
+            depWarning(msg);
             break;
         case `${prefix}volume`:
             changeVolume(msg, db, connections);
+            depWarning(msg);
             break;
         case `${prefix}ping`:
             sendPong(msg);
+            depWarning(msg);
             break;
         default:
             break;
