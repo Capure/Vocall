@@ -13,6 +13,7 @@ import { RedisLogic } from './redisLogic';
 import redis from 'redis';
 import interactions from "discord-slash-commands-client";
 import { depWarning } from './utils/depWarning';
+import { searchCommand } from './commands/search';
 dotenv.config({ path: path.join(__dirname, "../.env") });
 const redisClient = redis.createClient();
 const client: Discord.Client & { interactions?: interactions.Client } = new Discord.Client();
@@ -81,6 +82,17 @@ client.on('ready', () => {
         description: "let's you check if the bot is still alive"
     })
     .catch(console.error);
+    client.interactions?.createCommand({
+        name: "search",
+        description: "let's you search youtube for songs by their title",
+        options: [{
+            name: "title",
+            description: "name of the song you want to search for.",
+            type: 3,
+            required: true
+        }]
+    })
+    .catch(console.error);
 });
 
 client.on("interactionCreate", (interaction) => {
@@ -108,6 +120,9 @@ client.on("interactionCreate", (interaction) => {
             break;
         case "volume":
             changeVolumeCommand(interaction, db, connections);
+            break;
+        case "search":
+            searchCommand(interaction, db, connections);
             break;
         case "ping":
             sendPongCommand(interaction);
