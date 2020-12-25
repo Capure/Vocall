@@ -1,5 +1,6 @@
 import Discord from 'discord.js';
 import { RedisLogic } from '../redisLogic';
+import { channelGuard } from '../utils/channelGuard';
 
 
 export const changeVolume = async (msg: Discord.Message, db: RedisLogic, connections: Map<string, Discord.VoiceConnection>) => {
@@ -46,6 +47,16 @@ export const changeVolume = async (msg: Discord.Message, db: RedisLogic, connect
 }
 
 export const changeVolumeCommand = async (interaction: Discord.Interaction, db: RedisLogic, connections: Map<string, Discord.VoiceConnection>) => {
+    if (!channelGuard(interaction, connections)) {
+        const embed: Discord.MessageEmbed = new Discord.MessageEmbed()
+        .setColor(0x000000)
+        .setDescription(`
+        <@${interaction.author?.id}> you must be in a voice channel with me
+        in order to change the volume level!
+        `);
+        interaction.channel.send(embed);
+        return;
+    }
     if (interaction.options === null) { return };
     let newVolume = parseInt(interaction.options[0].value);
     if (isNaN(newVolume)) {

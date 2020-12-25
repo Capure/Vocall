@@ -97,7 +97,7 @@ client.on("interactionCreate", (interaction) => {
             dieCommand(interaction, db, connections);
             break;
         case "repeat":
-            repeatCommand(interaction, db);
+            repeatCommand(interaction, db, connections);
             break;
         case "skip":
             skipCommand(interaction, db, connections);
@@ -106,7 +106,7 @@ client.on("interactionCreate", (interaction) => {
             showQueueCommand(interaction, db);
             break;
         case "clear":
-            clearQueueCommand(interaction, db);
+            clearQueueCommand(interaction, db, connections);
             break;
         case "volume":
             changeVolumeCommand(interaction, db, connections);

@@ -2,6 +2,7 @@ import { onFinish, onFinishCommand } from './../utils/onFinish';
 import Discord from 'discord.js';
 import ytdl from 'ytdl-core';
 import { RedisLogic } from '../redisLogic';
+import { channelGuard } from '../utils/channelGuard';
 
 
 export const skip = async (msg: Discord.Message, db: RedisLogic, connections: Map<string, Discord.VoiceConnection>) => {
@@ -38,6 +39,15 @@ export const skip = async (msg: Discord.Message, db: RedisLogic, connections: Ma
 }
 
 export const skipCommand = async (interaction: Discord.Interaction, db: RedisLogic, connections: Map<string, Discord.VoiceConnection>) => {
+    if (!channelGuard(interaction, connections)) {
+        const embed: Discord.MessageEmbed = new Discord.MessageEmbed()
+        .setColor(0x000000)
+        .setDescription(`
+        <@${interaction.author?.id}> you must be in a voice channel with me in order to skip!
+        `);
+        interaction.channel.send(embed);
+        return;
+    }
     const queue = await db.getQueue(<any>(interaction.guild?.id));
     if (!queue.playing || queue.songs === null || queue.songs.length <= 0) {
         const embed: Discord.MessageEmbed = new Discord.MessageEmbed()

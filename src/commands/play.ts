@@ -86,7 +86,13 @@ export const playMusicCommand = async (interaction: Discord.Interaction, db: Red
         url = r.videos[0].url;
     }
     if (channel === null || !channel) {
-        msgchannel.send("You must be in a voice channel!");
+        const embed: Discord.MessageEmbed = new Discord.MessageEmbed()
+        .setColor(0x000000)
+        .setDescription(`
+        <@${interaction.author?.id}> in order to play a song or add it to the queue
+        you must be connected to a voice channel!
+        `);
+        interaction.channel.send(embed);
         return;
     } else {
         const songInfo = await ytdl.getInfo(url);
