@@ -29,13 +29,13 @@ export const changeVolumeCommand = async (interaction: Discord.Interaction, db: 
         interaction.channel.send(embed);
         return;
     }
-    if (newVolume > 200) {
-        const embed: Discord.MessageEmbed = new Discord.MessageEmbed()
-        .setColor(0x000000)
-        .setDescription("You can not set the volume to higher than 200 ...\nThat would be rude to other people in your voice channel!");
-        interaction.channel.send(embed);
-        return;
-    }
+    // if (newVolume > 200) {
+    //     const embed: Discord.MessageEmbed = new Discord.MessageEmbed()
+    //     .setColor(0x000000)
+    //     .setDescription("You can not set the volume to higher than 200 ...\nThat would be rude to other people in your voice channel!");
+    //     interaction.channel.send(embed);
+    //     return;
+    // } Disabled for now
     const queue = await db.getQueue(<any>(interaction.guild?.id));
     if (!queue.playing) {
         const embed: Discord.MessageEmbed = new Discord.MessageEmbed()

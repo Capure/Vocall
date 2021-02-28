@@ -30,6 +30,8 @@ client.user?.setActivity("music", { type: "PLAYING" });
 
 client.on('ready', () => {
     console.log(`Logged in as ${client.user?.tag}!`);
+    client.interactions?.deleteCommand("792094461164781579");
+    client.interactions?.deleteCommand("792093196296912929");
     client.interactions?.createCommand({
         name: "play",
         description: "let's you play music",
